@@ -16,6 +16,7 @@ public class ApplicationStart extends Application {
         TitleScreenController titleScreenController = new TitleScreenController(new TitleScreen());
 
         Scene scene = new Scene(titleScreenController.getView());
+        scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
         stage.setScene(scene);
         stage.setTitle("Splash Screen");
         stage.show();

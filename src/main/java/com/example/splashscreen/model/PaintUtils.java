@@ -20,7 +20,9 @@ public interface PaintUtils {
     enum PaintOptions {
 
 
-        PAINT_BRUSH("paint");
+        PAINT_BRUSH("paint"),
+        COLOR("color"),
+        STROKE_WIDTH("stroke width");
 
         private static final PaintOptions[] options;
 
