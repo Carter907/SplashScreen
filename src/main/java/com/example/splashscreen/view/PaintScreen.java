@@ -16,11 +16,16 @@ public class PaintScreen extends View {
     private TilePane optionsBar;
     private Canvas canvas;
     private Label paintOption;
+    private Slider strokeWidthOption;
+    private Label strokeWidthLabel;
+    private ColorPicker colorOption;
 
 
     public PaintScreen() {
         setToolbar();
         setPaintOption();
+        setStrokeWidthOption();
+        setColorOption();
         setOptionsBar();
 
         setCanvas();
@@ -29,22 +34,37 @@ public class PaintScreen extends View {
         getChildren().add(root);
     }
 
+    private void setColorOption() {
+
+        colorOption = new ColorPicker();
+    }
+
+    private void setStrokeWidthOption() {
+
+        strokeWidthOption = new Slider();
+        strokeWidthLabel = new Label("stroke width", strokeWidthOption);
+
+
+    }
+
     private void setCanvas() {
 
         canvas = new Canvas();
         canvas.setHeight(PaintUtils.Size.DEFAULT_CANVAS_HEIGHT.get());
         canvas.setWidth(PaintUtils.Size.DEFAULT_CANVAS_WIDTH.get());
 
-
+        canvas.setTranslateX(0);
     }
 
     private void setOptionsBar() {
         optionsBar = new TilePane();
         optionsBar.setPrefRows(2);
+        optionsBar.setPrefColumns(2);
         optionsBar.setPadding(new Insets(10));
 
 
-        optionsBar.getChildren().addAll(paintOption);
+        optionsBar.getChildren().addAll(paintOption, strokeWidthOption, colorOption);
+
 
     }
 
@@ -75,8 +95,6 @@ public class PaintScreen extends View {
     protected void setLayout() {
 
         root = new BorderPane();
-
-
         VBox top = new VBox();
 
         top.getChildren().addAll(toolBar, optionsBar);
@@ -85,10 +103,7 @@ public class PaintScreen extends View {
 
         root.setCenter(canvas);
 
-        root.setMinWidth(PaintUtils.Size.DEFAULT_WIDTH.get());
-        root.setMinHeight(PaintUtils.Size.DEFAULT_HEIGHT.get());
-
-
+        top.setPrefWidth(PaintUtils.Size.DEFAULT_WIDTH.get());
     }
 
     public Label getPaintOption() {
@@ -97,6 +112,18 @@ public class PaintScreen extends View {
 
     public TilePane getOptionsBar() {
         return optionsBar;
+    }
+
+    public Slider getStrokeWidthOption() {
+        return strokeWidthOption;
+    }
+
+    public Label getStrokeWidthLabel() {
+        return strokeWidthLabel;
+    }
+
+    public ColorPicker getColorOption() {
+        return colorOption;
     }
 
     public Canvas getCanvas() {
