@@ -22,9 +22,10 @@ public interface PaintUtils {
 
         PAINT_BRUSH("paint"),
         COLOR("color"),
+        CLEAR("clear canvas"),
         STROKE_WIDTH("stroke width");
 
-        private static final PaintOptions[] options;
+        public static final PaintOptions[] options;
 
         private final String value;
 

@@ -9,6 +9,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 
 public class PaintScreen extends View {
 
@@ -19,6 +20,7 @@ public class PaintScreen extends View {
     private Slider strokeWidthOption;
     private Label strokeWidthLabel;
     private ColorPicker colorOption;
+    private Label clearOption;
 
 
     public PaintScreen() {
@@ -26,6 +28,7 @@ public class PaintScreen extends View {
         setPaintOption();
         setStrokeWidthOption();
         setColorOption();
+        setClearOption();
         setOptionsBar();
 
         setCanvas();
@@ -34,9 +37,20 @@ public class PaintScreen extends View {
         getChildren().add(root);
     }
 
+    private void setClearOption() {
+
+        ImageView clearImg = new ImageView(ApplicationStart.class.getResource("icons/clear_option.png").toExternalForm());
+        clearImg.setFitHeight(30);
+        clearImg.setPreserveRatio(true);
+
+        clearOption = new Label("clear canvas", clearImg);
+
+    }
+
     private void setColorOption() {
 
         colorOption = new ColorPicker();
+        colorOption.setValue(Color.BLACK);
     }
 
     private void setStrokeWidthOption() {
@@ -63,7 +77,7 @@ public class PaintScreen extends View {
         optionsBar.setPadding(new Insets(10));
 
 
-        optionsBar.getChildren().addAll(paintOption, strokeWidthOption, colorOption);
+        optionsBar.getChildren().addAll(paintOption, strokeWidthOption, colorOption, clearOption);
 
 
     }
@@ -132,5 +146,9 @@ public class PaintScreen extends View {
 
     public MenuBar getToolBar() {
         return toolBar;
+    }
+
+    public Label getClearOption() {
+        return clearOption;
     }
 }

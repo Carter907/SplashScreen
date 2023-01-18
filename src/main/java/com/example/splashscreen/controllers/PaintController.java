@@ -3,8 +3,6 @@ package com.example.splashscreen.controllers;
 import com.example.splashscreen.model.PaintUtils;
 import com.example.splashscreen.view.PaintScreen;
 import javafx.beans.Observable;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Label;
@@ -25,18 +23,24 @@ public class PaintController extends Controller {
     private volatile PaintUtils.PaintOptions selected;
     private HashMap<PaintUtils.PaintOptions, Label> optionsMap;
     private PaintScreen paintView;
-    private double x,y;
-    
+    private double x, y;
+
 
     public PaintController(PaintScreen view) {
         super(view);
         paintView = view;
         context = view.getCanvas().getGraphicsContext2D();
         optionsMap = new HashMap<>(Map.of(
-                PaintUtils.PaintOptions.getOption(view.getPaintOption().getText()), view.getPaintOption()
+                PaintUtils.PaintOptions.getOption(view.getPaintOption().getText()), view.getPaintOption(),
+                PaintUtils.PaintOptions.getOption(view.getClearOption().getText()), view.getClearOption()
 
         ));
-        view.getPaintOption().setOnMouseClicked(this::optionClicked);
+        for (PaintUtils.PaintOptions option : PaintUtils.PaintOptions.options) {
+            Label optionLabel = optionsMap.get(option);
+            if (optionLabel != null)
+                optionLabel.setOnMouseClicked(this::optionClicked);
+        }
+
         view.getCanvas().setOnMouseClicked(this::canvasClicked);
         view.getCanvas().setOnMouseDragged(this::canvasDragged);
         view.getCanvas().setOnMousePressed(this::canvasPressed);
@@ -59,15 +63,18 @@ public class PaintController extends Controller {
             return;
         Label option = (Label) event.getSource();
 
-        if (selected != null && option.equals(optionsMap.get(selected))) {
+        setSelected(option);
+
+    }
+
+    private void setSelected(Label option) {
+
+        if (selected != null) {
+            optionsMap.get(selected).setBackground(null);
             selected = null;
-            option.setBackground(null);
-
-        } else {
-            option.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, new CornerRadii(5), null)));
-            selected = PaintUtils.PaintOptions.getOption(option.getText());
         }
-
+        option.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, new CornerRadii(5), null)));
+        selected = PaintUtils.PaintOptions.getOption(option.getText());
     }
 
     private void canvasClicked(MouseEvent event) {
@@ -76,11 +83,20 @@ public class PaintController extends Controller {
         switch (selected) {
 
             case PAINT_BRUSH -> clickCanvasPaintBrush(event);
+            case CLEAR -> clickClearCanvas(event);
 
         }
 
+    }
+
+    private void clickClearCanvas(MouseEvent event) {
+
+        context.beginPath();
+        context.setFill(Color.WHITE);
+        context.fillRect(0, 0, PaintUtils.Size.DEFAULT_CANVAS_WIDTH.get(), PaintUtils.Size.DEFAULT_CANVAS_WIDTH.get());
 
     }
+
     private void canvasPressed(MouseEvent event) {
         if (selected == null)
             return;
@@ -89,6 +105,7 @@ public class PaintController extends Controller {
             case PAINT_BRUSH -> pressCanvasPaintBrush(event);
         }
     }
+
     private void canvasReleased(MouseEvent event) {
         if (selected == null)
             return;
@@ -101,6 +118,7 @@ public class PaintController extends Controller {
     private void releaseCanvasPaintBrush(MouseEvent event) {
         context.beginPath();
     }
+
     private void pressCanvasPaintBrush(MouseEvent event) {
         x = event.getX();
         y = event.getY();
@@ -116,8 +134,6 @@ public class PaintController extends Controller {
         }
 
     }
-    
-    
 
     private void dragCanvasPaintBrush(MouseEvent event) {
 
